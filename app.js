@@ -9,11 +9,7 @@ const app = express();
 // 1) MIDDLEWARES
 app.use(express.json()); // middleware - a function that can modify the incoming request data from the client
 app.use(morgan('dev'));
-
-// app.use((req, res, next) => {
-//   console.log('Hello from the middleware stack 👋');
-//   next();
-// });
+app.use(express.static(`${__dirname}/public`));
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();

@@ -4,6 +4,30 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );
 
+exports.checkID = (req, res, next, val) => {
+  // param middleware
+  console.log(`Tour id is: ${val} 😎`);
+  // if (req.params.id * 1 > tours.length) {
+  if (val * 1 > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID',
+    });
+  }
+  next();
+};
+
+exports.checkBody = (req, res, next) => {
+  // if (req.body.name === null || req.body.price === null) {
+  if (!req.body.name || !req.body.price) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Missing name or price',
+    });
+  }
+  next();
+};
+
 exports.getAllTours = (req, res) => {
   console.log(req.requestTime);
   res.status(200).json({
@@ -22,12 +46,7 @@ exports.getTourById = (req, res) => {
   const id = req.params.id * 1;
   const tour = tours.find((el) => el.id === id);
 
-  if (id > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  } else if (!tour) {
+  if (!tour) {
     return res.status(404).json({
       status: 'fail',
       message: 'no tour exists with this ID',
@@ -67,18 +86,6 @@ exports.updateTourById = (req, res) => {
   const id = req.params.id * 1;
   const tour = tours.find((el) => el.id === id);
 
-  if (id > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID',
-    });
-  } else if (!tour) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'no tour exists with this ID',
-    });
-  }
-
   res.status(201).json({
     status: 'success',
     data: {
@@ -89,12 +96,12 @@ exports.updateTourById = (req, res) => {
 
 exports.deleteTourById = (req, res) => {
   // Check if there are tours to delete
-  if (tours.length === 0) {
-    return res.status(404).json({
-      status: 'error',
-      message: 'No tours found to delete.',
-    });
-  }
+  // if (tours.length === 0) {
+  //   return res.status(404).json({
+  //     status: 'error',
+  //     message: 'No tours found to delete.',
+  //   });
+  // }
 
   // Remove the latest tour from the tours array
   const deletedTour = tours.pop();

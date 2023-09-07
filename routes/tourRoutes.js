@@ -11,7 +11,7 @@ router
 
 router.route('/').get(tourController.getAllTours);
 
-router.use(tourController.checkBody);
-router.post('/', tourController.checkBody, tourController.createNewTour);
+// router.use(tourController.checkBody);
+router.post('/', tourController.createNewTour);
 
 module.exports = router;

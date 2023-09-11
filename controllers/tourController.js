@@ -72,26 +72,18 @@ exports.updateTourById = async (req, res) => {
   }
 };
 
-exports.deleteTourById = (req, res) => {
-  // Remove the latest tour from the tours array
-  // const deletedTour = tours.pop();
-  // // Update the tours-simple.json file with the updated tours array
-  // fs.writeFile(
-  //   `${__dirname}/dev-data/data/tours-simple.json`,
-  //   JSON.stringify(tours),
-  //   (err) => {
-  //     if (err) {
-  //       return res.status(500).json({
-  //         status: 'error',
-  //         message: 'Failed to delete the latest tour.',
-  //       });
-  //     }
-  //     res.status(204).json({
-  //       status: 'success, no content',
-  //       data: {
-  //         tour: deletedTour,
-  //       },
-  //     });
-  //   },
-  // );
+exports.deleteTourById = async (req, res) => {
+  try {
+    await Tour.findByIdAndDelete(req.params.id);
+
+    res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: 'Failed to delete!',
+    });
+  }
 };
